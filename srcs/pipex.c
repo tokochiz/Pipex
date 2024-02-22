@@ -6,12 +6,22 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 17:19:21 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/22 18:34:02 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/02/22 21:19:16 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
+char	*find_path_from_env(char **envp)
+{
+	while (*envp)
+	{
+		if (ft_strncmp("PATH", *envp, 4) == 0) // "PATH"で始まる環境変数を探す
+			return (*envp + 5);  // "PATH="の長さ（５）後のパスのリストを指す
+		envp++;
+	}
+	return (NULL);
+}
 
 // 環境変数へのアクセスが必要な場合 char *envp[]を引数に追加
 int	main(int argc, char **argv, char *envp[])
@@ -20,18 +30,16 @@ int	main(int argc, char **argv, char *envp[])
 
 	// 引数チェック
 	if (argc != 5)
-		return (error_msg("Invalid number of arguments"));
-			// TODO: ERROR msg を出力させる
-			
+		error_msg("Invalid number of arguments");
+		
+	// TODO: ERROR msg を出力させる
 	// ファイルオープン
 	pipex.infile = open(argv[1], O_RDONLY); // 読み取り専用でファイルを開く
 	if (pipex.infile < 0)
 		error_msg(); // TODO: ERROR msg を出力させる
-		
-	pipex.outfile = open(argv[argc - 1], O_RDWR, ); //読み書きできるように権限を設定する
-	if (pipex.outfile < 0) 
-		error_msg();        // TODO: ERROR msg を出力させる
-		
+	pipex.outfile = open(argv[argc - 1], O_RDWR | O_TRUNC | O_CREAT, 0000644); //読み書き両方でオープンもしくは、ファイルが存在しなければ新規作成、ファイルサイズを0に切り詰める
+	if (pipex.outfile < 0)
+		error_msg(); // TODO: ERROR msg を出力させる
 	// パイプ作成
 	pipe(pipex.tube);
 	if (pipex.tube < 0)
@@ -48,17 +56,15 @@ int	main(int argc, char **argv, char *envp[])
 	pipex.pid2 = fork();
 	if (pipex.pid2 == 0)
 		second_child_process();
-
+		
 	// パイプのクローズ
 	close_pipes(&pipex);
-
 	
 	// 子プロセスの終了をまつ
-	wait_pid();
-	wait_pid();
+	waitpid();
+	waitpid();
 	
 	// 親リソースの解放
-	releace_parent_resource();
-	
+	releace_parent_resources(&pipex);
 	return (0);
 }
