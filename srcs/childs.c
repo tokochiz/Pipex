@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 15:41:21 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/24 20:46:14 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/02/24 20:53:49 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ char *get_cmd_execution_path(char **paths_list, char *cmd)
 		path_with_slash = ft_strjoin(*paths_list, "/");
 		cmd_fullpath = ft_strjoin(path_with_slash, cmd);
 		free(path_with_slash);
-		// TODO: コマンドの存在チェック
-		if(access(cmd_fullpath, 0), 0) == 0)
-			return ;
+		// TODO: コマンドの存在チェック　0	引数 mode で指定したアクセス権がある
+		if(access(cmd_fullpath, 0) == 0)
+			return cmd_fullpath;
 		// TODO:見つからなかったらフリー
 		free(cmd_fullpath);
 		// TODO: 次のパスに移動
