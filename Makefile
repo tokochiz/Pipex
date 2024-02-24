@@ -5,25 +5,24 @@ INC_DIR = includes
 
 SRC_DIR = srcs
 SRC_FILES = pipex.c \
-			error.c
+			error.c \
 			
 SRCS = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 
-FUN_DIR = functions
-FUN_FILES = ft_putstr.c \
-			ft_strncmp.c 
+LIBFT = libft/libft.a
 
-FUNS = $(addprefix $(FUN_DIR)/, $(FUN_FILES))
-
-OBJS = $(FUNS:.c=.o) $(SRCS:.c=.o)
+OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(LIBFT) $(OBJS)
 	ar rcs $(NAME) $(OBJS)
 
+$(LIBFT): 
+	make -C libft 
+
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBFT)
 
 clean:
 	rm -f $(OBJS)
