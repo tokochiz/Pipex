@@ -22,7 +22,7 @@ $(LIBFT):
 	make -C libft 
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@ $(LIBFT)
+	$(CC) $(CFLAGS) -c $< -o $@ 
 
 clean:
 	rm -f $(OBJS)

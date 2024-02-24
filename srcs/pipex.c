@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 17:19:21 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/22 21:19:16 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/02/24 19:38:36 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ char	*find_path_from_env(char **envp)
 }
 
 // 環境変数へのアクセスが必要な場合 char *envp[]を引数に追加
-int	main(int argc, char **argv, char *envp[])
+int	main(int argc, char *argv[], char *envp[])
 {
 	t_pipex	pipex;
 
 	// 引数チェック
 	if (argc != 5)
 		error_msg("Invalid number of arguments");
-		
+		return(1);
 	// TODO: ERROR msg を出力させる
 	// ファイルオープン
 	pipex.infile = open(argv[1], O_RDONLY); // 読み取り専用でファイルを開く
@@ -44,26 +44,27 @@ int	main(int argc, char **argv, char *envp[])
 	pipe(pipex.tube);
 	if (pipex.tube < 0)
 		error_mgs();
-		
+
 	// コマンドパスの検索
 	pipex.paths = find_path_from_env(envp);
-	pipex.cmd_paths = ft_split(pipex.paths, ':');
-	
+	pipex.cmd_paths_list = ft_split(pipex.paths, ':');
+
 	// ２つの子プロセスの作成
 	pipex.pid1 = fork();
 	if (pipex.pid1 == 0) //成功した場合、親プロセスには子プロセスの PID ,子プロセスには 0 が返る
-		first_child_process();
+		execute_first_command(pipex, argv, envp);
+	waitpid(pipex.pid1, NULL, 0);
+
 	pipex.pid2 = fork();
 	if (pipex.pid2 == 0)
-		second_child_process();
-		
+		execute_second_command(pipex, argv, envp);
+
 	// パイプのクローズ
 	close_pipes(&pipex);
-	
-	// 子プロセスの終了をまつ
-	waitpid();
-	waitpid();
-	
+
+	// 親プロセスで子プロセスの終了を待つ
+	waitpid(pipex.pid2, NULL, 0);
+
 	// 親リソースの解放
 	releace_parent_resources(&pipex);
 	return (0);
