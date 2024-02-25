@@ -28,7 +28,7 @@ YOU coded
 - file1の内容をcmd1に渡し、その出力をcmd2に渡し、最終的な出力をfile2に書き込む
 - 以下の出力と同じ動作をする
 ```shell
-<file1 cmd1 | cmd2 >file2
+< file1 cmd1 | cmd2 > file2
 ```
 
 
