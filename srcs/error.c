@@ -6,14 +6,14 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 17:45:12 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/22 18:00:53 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/02/25 14:11:12 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-void error_msg(const char *msg)
+void put_error_msg(const char *msg)
 {
-	ft_putstr(msg);
-	exit(EXIT_FAILURE);
+	perror(msg);
+	exit(EXIT_FAILURE); // 1
 }
