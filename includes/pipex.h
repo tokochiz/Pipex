@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/17 18:06:35 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/25 14:56:35 by  ctokoyod        ###   ########.fr       */
+/*   Created: 2024/02/25 18:37:43 by  ctokoyod         #+#    #+#             */
+/*   Updated: 2024/02/27 19:47:34 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,51 +26,40 @@
 # include <fcntl.h>
 
 // waitpid, wait
-#include <sys/wait.h>
+# include <sys/wait.h>
 
 // to Libft
-#include "../Libft/libft.h"
+# include "../Libft/libft.h"
 
-// exit 関数　引数　
-# define EXIT_SUCCESS 0
-# define EXIT_FAILURE 1
+// errors msg
+# define ERR_INVALID "Invalid number of arguments\n"
+# define ERR_INFILE "infile"
+# define ERR_OUTFILE "outfile"
+# define ERR_PIPE "pipe"
+# define ERR_EXECVE "execve"
+# define ERR_CMD "Error : Command not found\n"
+# define ERR_DIR "Error : No such file of directory\n"
 
-// errors
-# define ERR_INVALID_NUM_ARGS "Invalid number of arguments"
-# define ERR_IN_FILE "err infile"
-# define ERR_OUT_FILE "err outfile"
-# define ERR_PIPE "err pipe"
-#define ERR_CMD "err command not found"
 
 typedef struct s_pipex
 {
 	pid_t	pid1;
 	pid_t	pid2;
-	int infile;  // openの返り値がint
-	int outfile; // openの返り値がint
+	int		infile;
+	int		outfile;
 	int		tube[2];
-	char *paths; // one line paths
-	char	**cmd_paths_list;
+	char	**split_path_array;
 	char	**cmd_args;
 	char	*cmd_fullpath;
 }			t_pipex;
 
 /* ------------ srcs ------------ */
-char		*find_path_from_env(char **envp);
-
-// child
+char		**find_path_from_env(char *envp[]);
 char		*get_cmd_execution_path(char **paths_list, char *cmd);
-void		execute_first_command(t_pipex pipex, char **argv, char *envp[]);
-void		execute_second_command(t_pipex pipex, char **argv, char *envp[]);
-
-// error
-void		put_error_msg(const char *msg);
-
-// free
+void		execute_first_command(t_pipex pipex, char *argv[], char *envp[]);
+void		execute_second_command(t_pipex pipex, char *argv[], char *envp[]);
+void		put_error_msg(const char *msg, int is_manual);
 void		free_parent(t_pipex *pipex);
 void		free_child(t_pipex *pipex);
 
 #endif
-
-// int access(const char *pathname, int how);
-// pid_t waitpid(pid_t pid, int *status_ptr, int options);
