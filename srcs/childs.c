@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 15:41:21 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/25 16:06:03 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/02/25 19:48:31 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	execute_first_command(t_pipex pipex, char **argv, char *envp[])
 
 void	execute_second_command(t_pipex pipex, char **argv, char *envp[])
 {
-	// TODO: パイプの読み込みがわを標準入力にする　標準出力：１
+	// TODO: パイプの読み込みがわを標準入力にする　標準入力：１
 	dup2(pipex.tube[0], 0);
 	// TODO:　パイプの読み取りがわを閉じる
 	close(pipex.tube[1]);

@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 17:19:21 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/25 15:58:35 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/02/27 18:06:12 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,9 @@ int	main(int argc, char *argv[], char *envp[])
 	pipex.infile = open(argv[1], O_RDONLY); // 読み取り専用でファイルを開く
 	if (pipex.infile < 0)
 		put_error_msg(ERR_IN_FILE);                                           
-			// TODO: ERROR msg を出力させる
 
 	pipex.outfile = open(argv[argc - 1], O_RDWR | O_TRUNC | O_CREAT, 0644);
-		//読み書き両方でオープンもしくは、ファイルが存在しなければ新規作成、ファイルサイズを0に切り詰める　-rw-r--r--（読むだけのファイル）
+	//読み書き両方でオープンもしくは、ファイルが存在しなければ新規作成、ファイルサイズを0に切り詰める　-rw-r--r--（読むだけのファイル）
 
 	if (pipex.outfile < 0)
 		put_error_msg(ERR_OUT_FILE); // TODO: ERROR msg を出力させる
@@ -57,9 +56,8 @@ int	main(int argc, char *argv[], char *envp[])
 	if (pipex.tube < 0)
 		put_error_msg(ERR_PIPE);
 	// コマンドパスの検索
-
-	pipex.paths = find_path_from_env(envp);
-	pipex.cmd_paths_list = ft_split(pipex.paths, ':');
+	pipex.paths = find_path_from_env(envp); // 環境変数のPATHをまとめて取得する
+	pipex.cmd_paths_list = ft_split(pipex.paths, ':'); // ：で区切る
 	// ２つの子プロセスの作成
 	
 	pipex.pid1 = fork();
