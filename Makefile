@@ -3,9 +3,8 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -I $(INC_DIR)
 INC_DIR = includes
 
-SRC_DIR = srcs
+SRC_DIR = Mandatory
 SRC_FILES = pipex.c \
-			error.c \
 			free.c \
 			childs.c 
 			
