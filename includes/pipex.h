@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 18:37:43 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/27 19:47:34 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/02/27 22:26:34 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@
 # define ERR_CMD "Error : Command not found\n"
 # define ERR_DIR "Error : No such file of directory\n"
 
-
 typedef struct s_pipex
 {
 	pid_t	pid1;
@@ -53,13 +52,17 @@ typedef struct s_pipex
 	char	*cmd_fullpath;
 }			t_pipex;
 
-/* ------------ srcs ------------ */
+/* childs */
 char		**find_path_from_env(char *envp[]);
 char		*get_cmd_execution_path(char **paths_list, char *cmd);
 void		execute_first_command(t_pipex pipex, char *argv[], char *envp[]);
 void		execute_second_command(t_pipex pipex, char *argv[], char *envp[]);
-void		put_error_msg(const char *msg, int is_manual);
+
+/* free */
 void		free_parent(t_pipex *pipex);
 void		free_child(t_pipex *pipex);
+/* error */
+void	put_error_msg(const char *msg, int is_manual);
+void	put_error_file(t_pipex *pipex);
 
 #endif

@@ -6,24 +6,11 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 18:34:55 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/27 20:10:49 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/02/27 22:28:05 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
-
-void	put_error_msg(const char *msg, int is_manual)
-{
-	if(is_manual == 1)
-	{
-		ft_putstr_fd(msg, STDERR_FILENO);
-		exit(EXIT_FAILURE);
-	}
-	else{
-	perror(msg);
-	exit(EXIT_FAILURE);
-	}
-}
 
 char	**find_path_from_env(char *envp[])
 {
@@ -58,11 +45,9 @@ int	main(int argc, char *argv[], char *envp[])
 	if (argc != 5)
 		put_error_msg(ERR_INVALID, 1);
 	pipex.infile = open(argv[1], O_RDONLY);
-	if (pipex.infile < 0)
-		put_error_msg(ERR_INFILE, 0);
 	pipex.outfile = open(argv[argc - 1], O_RDWR | O_TRUNC | O_CREAT, 0644);
-	if (pipex.outfile < 0)
-		put_error_msg(ERR_OUTFILE, 0);
+	if (pipex.outfile < 0 || pipex.outfile < 0)
+		put_error_file(&pipex);
 	pipe(pipex.tube);
 	if (pipex.tube < 0)
 		put_error_msg(ERR_PIPE, 0);
