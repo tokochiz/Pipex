@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 12:51:10 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/26 13:07:53 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/02/29 14:52:39 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	free_parent(t_pipex *pipex)
 
 void	free_child(t_pipex *pipex)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (pipex->cmd_args[i])

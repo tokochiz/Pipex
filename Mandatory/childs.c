@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 12:54:54 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/27 19:15:43 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/02/29 12:38:58 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,20 @@ void	execute_first_command(t_pipex pipex, char *argv[], char *envp[])
 	close(pipex.tube[0]);
 	dup2(pipex.infile, STDIN_FILENO);
 	pipex.cmd_args = ft_split(argv[2], ' ');
+	if (pipex.cmd_args == NULL || pipex.cmd_args[0] == NULL
+		|| *(pipex.cmd_args[0]) == '\0')
+	{
+		free_child(&pipex);
+		put_error_msg(ERR_CMD, 1);
+		exit(EXIT_FAILURE);
+	}
 	pipex.cmd_fullpath = get_cmd_execution_path(pipex.split_path_array,
-		pipex.cmd_args[0]);
+			pipex.cmd_args[0]);
 	if (pipex.cmd_fullpath == NULL)
 	{
 		free_child(&pipex);
 		put_error_msg(ERR_CMD, 1);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	if (execve(pipex.cmd_fullpath, pipex.cmd_args, envp) == -1)
 		put_error_msg(ERR_EXECVE, 0);
@@ -61,13 +68,20 @@ void	execute_second_command(t_pipex pipex, char *argv[], char *envp[])
 	close(pipex.tube[1]);
 	dup2(pipex.outfile, STDOUT_FILENO);
 	pipex.cmd_args = ft_split(argv[3], ' ');
+	if (pipex.cmd_args == NULL || pipex.cmd_args[0] == NULL
+		|| *(pipex.cmd_args[0]) == '\0')
+	{
+		free_child(&pipex);
+		put_error_msg(ERR_CMD, 1);
+		exit(EXIT_FAILURE);
+	}
 	pipex.cmd_fullpath = get_cmd_execution_path(pipex.split_path_array,
-		pipex.cmd_args[0]);
+			pipex.cmd_args[0]);
 	if (pipex.cmd_fullpath == NULL)
 	{
 		free_child(&pipex);
 		put_error_msg(ERR_CMD, 1);
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	if (execve(pipex.cmd_fullpath, pipex.cmd_args, envp) == -1)
 		put_error_msg(ERR_EXECVE, 0);

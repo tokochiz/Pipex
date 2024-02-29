@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 18:34:55 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/27 22:28:05 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/02/29 12:39:15 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ char	**find_path_from_env(char *envp[])
 	}
 	if (all_path_str == NULL)
 		return (NULL);
-
 	return (ft_split(all_path_str, ':'));
 }
 
@@ -47,7 +46,7 @@ int	main(int argc, char *argv[], char *envp[])
 	pipex.infile = open(argv[1], O_RDONLY);
 	pipex.outfile = open(argv[argc - 1], O_RDWR | O_TRUNC | O_CREAT, 0644);
 	if (pipex.outfile < 0 || pipex.outfile < 0)
-		put_error_file(&pipex);
+		put_error_file(pipex);
 	pipe(pipex.tube);
 	if (pipex.tube < 0)
 		put_error_msg(ERR_PIPE, 0);
