@@ -6,7 +6,8 @@ INC_DIR = includes
 SRC_DIR = Mandatory
 SRC_FILES = pipex.c \
 			free.c \
-			childs.c 
+			childs.c \
+			error.c
 			
 SRCS = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 
