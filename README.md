@@ -16,8 +16,9 @@ YOU coded
 - Description This project is about handling pipes.
 
 ## 概要
-- 目的　シェルの「リダイレクション」と「パイプ」の処理を扱う
-- *Mandatory*
+- 目的　: シェルの「リダイレクション」と「パイプ」の処理を扱う
+
+### Mandatory
 - プログラムは以下のように実行する
 	- 4つの引数を取る：
 	- file1とfile2はファイル名
