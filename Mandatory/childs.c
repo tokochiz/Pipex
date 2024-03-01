@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 12:54:54 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/29 12:38:58 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/03/01 16:27:59 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,19 @@ char	*get_cmd_execution_path(char **split_path_array, char *cmd)
 
 	if (ft_strchr(&cmd[0], '/') != 0)
 	{
-		if (access(&cmd[0], F_OK) == 0)
+		if (access(&cmd[0], X_OK) == 0)
 			return (&cmd[0]);
 		else
-			put_error_msg(ERR_DIR, 1);
+			put_error_after_exit(ERR_DIR, 1);
 	}
+	if(*split_path_array == NULL)
+		perror(ERR_DIR);
 	while (*split_path_array)
 	{
 		path_with_slash = ft_strjoin(*split_path_array, "/");
 		cmd_fullpath = ft_strjoin(path_with_slash, cmd);
 		free(path_with_slash);
-		if (access(cmd_fullpath, F_OK) == 0)
+		if (access(cmd_fullpath, X_OK) == 0)
 			return (cmd_fullpath);
 		free(cmd_fullpath);
 		split_path_array++;
@@ -47,19 +49,17 @@ void	execute_first_command(t_pipex pipex, char *argv[], char *envp[])
 		|| *(pipex.cmd_args[0]) == '\0')
 	{
 		free_child(&pipex);
-		put_error_msg(ERR_CMD, 1);
-		exit(EXIT_FAILURE);
+		put_error_after_exit(ERR_CMD, 1);
 	}
 	pipex.cmd_fullpath = get_cmd_execution_path(pipex.split_path_array,
 			pipex.cmd_args[0]);
 	if (pipex.cmd_fullpath == NULL)
 	{
 		free_child(&pipex);
-		put_error_msg(ERR_CMD, 1);
-		exit(EXIT_FAILURE);
+		put_error_after_exit(ERR_CMD, 1);
 	}
 	if (execve(pipex.cmd_fullpath, pipex.cmd_args, envp) == -1)
-		put_error_msg(ERR_EXECVE, 0);
+		put_error_after_exit(ERR_EXECVE, 0);
 }
 
 void	execute_second_command(t_pipex pipex, char *argv[], char *envp[])
@@ -72,17 +72,15 @@ void	execute_second_command(t_pipex pipex, char *argv[], char *envp[])
 		|| *(pipex.cmd_args[0]) == '\0')
 	{
 		free_child(&pipex);
-		put_error_msg(ERR_CMD, 1);
-		exit(EXIT_FAILURE);
+		put_error_after_exit(ERR_CMD, 1);
 	}
 	pipex.cmd_fullpath = get_cmd_execution_path(pipex.split_path_array,
 			pipex.cmd_args[0]);
 	if (pipex.cmd_fullpath == NULL)
 	{
 		free_child(&pipex);
-		put_error_msg(ERR_CMD, 1);
-		exit(EXIT_FAILURE);
+		put_error_after_exit(ERR_CMD, 1);
 	}
 	if (execve(pipex.cmd_fullpath, pipex.cmd_args, envp) == -1)
-		put_error_msg(ERR_EXECVE, 0);
+		put_error_after_exit(ERR_EXECVE, 0);
 }
