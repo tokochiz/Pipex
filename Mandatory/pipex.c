@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 18:34:55 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/03/01 16:23:45 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/03/01 20:53:48 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	**find_path_from_env(char *envp[])
 
 	all_path_str = NULL;
 	if (!envp)
-		return (NULL);
+		put_error_after_exit(ERR_CMD, 1);
 	while (*envp)
 	{
 		if (ft_strncmp("PATH", *envp, 4) == 0 && *(*envp + 5) != '\0')
@@ -29,7 +29,7 @@ char	**find_path_from_env(char *envp[])
 		envp++;
 	}
 	if (all_path_str == NULL)
-		return (NULL);
+		put_error_after_exit(ERR_CMD, 1);
 	return (ft_split(all_path_str, ':'));
 }
 
@@ -51,10 +51,7 @@ int	main(int argc, char *argv[], char *envp[])
 		put_error_file(pipex);
 	pipe(pipex.tube);
 	if (pipex.tube < 0)
-	{
-		perror(ERR_PIPE);
-		return (1);
-	}
+		put_error_after_exit(ERR_PIPE, 0);
 	pipex.split_path_array = find_path_from_env(envp);
 	pipex.pid1 = fork();
 	if (pipex.pid1 == 0)
