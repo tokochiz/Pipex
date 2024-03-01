@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 18:37:43 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/02/26 15:39:33 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/02/29 14:48:43 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,18 @@
 # define ERR_OUTFILE "outfile"
 # define ERR_PIPE "pipe"
 # define ERR_EXECVE "execve"
+#define ERR_DUP2 "dup2 "
 # define ERR_CMD "Error : command not found"
 # define ERR_DIR "Error : No such file of directory"
 
 typedef struct s_pipex
 {
+	pid_t	pid;
 	int		infile;
 	int		outfile[2];
-	int		tube[2];
+	int		pipe_fd[2][2];
+	int		current_pipe;
+	int		next_pipe;
 	char	**split_path_array;
 	char	**cmd_args;
 	char	*cmd_fullpath;
