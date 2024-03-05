@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 12:54:54 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/03/01 16:27:59 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/03/05 20:37:14 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*get_cmd_execution_path(char **split_path_array, char *cmd)
 		else
 			put_error_after_exit(ERR_DIR, 1);
 	}
-	if(*split_path_array == NULL)
+	if (*split_path_array == NULL)
 		perror(ERR_DIR);
 	while (*split_path_array)
 	{
