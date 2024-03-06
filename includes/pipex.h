@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 18:37:43 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/03/02 16:50:14 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/03/06 16:59:11 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ char		**find_path_from_env(char *envp[]);
 void		close_pipes(t_pipex *pipex);
 
 char		*get_cmd_execution_path(char **paths_list, char *cmd);
+void		execute_path(t_pipex pipex, char *envp[]);
 void		execute_first_command(t_pipex pipex, char *argv[], char *envp[]);
 void		execute_second_command(t_pipex pipex, char *argv[], char *envp[]);
 
