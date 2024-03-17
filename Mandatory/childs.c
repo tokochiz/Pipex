@@ -5,57 +5,87 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 12:54:54 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/03/06 21:06:09 by  ctokoyod        ###   ########.fr       */
+/*   Created: 2024/03/17 16:24:26 by  ctokoyod         #+#    #+#             */
+/*   Updated: 2024/03/17 21:25:28 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-char	*get_cmd_execution_path(char **split_path_array, char *cmd)
+char	**extract_path_from_env(char *envp[])
 {
-	char	*path_with_slash;
+	char	*path_str;
+	char	**paths;
+
+	path_str = NULL;
+	if (envp == NULL)
+		put_error(ERR_CMD, 1);
+	while (*envp)
+	{
+		if (ft_strncmp("PATH=", *envp, 5) == 0)
+		{
+			path_str = *envp + 5;
+			break ;
+		}
+		envp++;
+	}
+	if (path_str == NULL)
+		put_error(ERR_CMD, 1);
+	paths = ft_split(path_str, ':');
+	if (paths == NULL)
+		put_error(ERR_CMD, 1);
+	return (paths);
+}
+
+char	*get_path(t_pipex pipex, char *envp[])
+{
 	char	*cmd_fullpath;
 
-	if (ft_strchr(&cmd[0], '/') != 0)
+	pipex.split_paths = extract_path_from_env(envp);
+	if (pipex.split_paths == NULL)
 	{
-		if (execve(&cmd[0], pipex.cmd_args, envp) == -1)
-			return (&cmd[0]);
+		if (access(pipex.cmd_args[0], X_OK) == 0)
+			return (pipex.cmd_args[0]);
 		else
-			put_error_after_exit(ERR_DIR, 1);
+			put_error(ERR_DIR, 1);
 	}
-	if (*split_path_array == NULL)
-		perror(ERR_DIR);
-	while (*split_path_array)
+	while (*pipex.split_paths)
 	{
-		path_with_slash = ft_strjoin(*split_path_array, "/");
-		cmd_fullpath = ft_strjoin(path_with_slash, cmd);
-		free(path_with_slash);
+		cmd_fullpath = ft_strjoin(*pipex.split_paths, "/");
+		cmd_fullpath = ft_strjoin(cmd_fullpath, pipex.cmd_args[0]);
 		if (access(cmd_fullpath, X_OK) == 0)
 			return (cmd_fullpath);
 		free(cmd_fullpath);
-		split_path_array++;
+		pipex.split_paths++;
 	}
+	free_split(pipex.split_paths);
 	return (NULL);
 }
 
-void	execute_path(t_pipex pipex, char *envp[])
+char	*execute_command(t_pipex pipex, char *envp[])
 {
 	if (pipex.cmd_args == NULL || pipex.cmd_args[0] == NULL
 		|| *(pipex.cmd_args[0]) == '\0')
 	{
 		free_child(&pipex);
-		put_error_after_exit(ERR_CMD, 1);
+		put_error(ERR_CMD, 1);
 	}
-	pipex.cmd_fullpath = get_cmd_execution_path(pipex.split_path_array,
-		pipex.cmd_args[0]);
+	if (ft_strchr(pipex.cmd_args[0], '/') != 0 || !(envp))
+	{
+		if (access(pipex.cmd_args[0], X_OK) == 0)
+			return (pipex.cmd_args[0]);
+		else
+			put_error(ERR_DIR, 1);
+	}
+	pipex.cmd_fullpath = get_path(pipex, envp);
 	if (pipex.cmd_fullpath == NULL)
 	{
 		free_child(&pipex);
-		put_error_after_exit(ERR_CMD, 1);
+		put_error(ERR_CMD, 1);
 	}
 	if (execve(pipex.cmd_fullpath, pipex.cmd_args, envp) == -1)
-		put_error_after_exit(ERR_EXECVE, 0);
+		put_error(ERR_EXECVE, 0);
+	return (NULL);
 }
 
 void	execute_first_command(t_pipex pipex, char *argv[], char *envp[])
@@ -64,22 +94,9 @@ void	execute_first_command(t_pipex pipex, char *argv[], char *envp[])
 	close(pipex.tube[0]);
 	dup2(pipex.infile, STDIN_FILENO);
 	pipex.cmd_args = ft_split(argv[2], ' ');
-	execute_path(pipex, envp);
-	// if (pipex.cmd_args == NULL || pipex.cmd_args[0] == NULL
-	// 	|| *(pipex.cmd_args[0]) == '\0')
-	// {
-	// 	free_child(&pipex);
-	// 	put_error_after_exit(ERR_CMD, 1);
-	// }
-	// pipex.cmd_fullpath = get_cmd_execution_path(pipex.split_path_array,
-	// 	pipex.cmd_args[0]);
-	// if (pipex.cmd_fullpath == NULL)
-	// {
-	// 	free_child(&pipex);
-	// 	put_error_after_exit(ERR_CMD, 1);
-	// }
-	// if (execve(pipex.cmd_fullpath, pipex.cmd_args, envp) == -1)
-	// 	put_error_after_exit(ERR_EXECVE, 0);
+	if (pipex.cmd_args == NULL)
+		put_error(ERR_CMD, 1);
+	execute_command(pipex, envp);
 }
 
 void	execute_second_command(t_pipex pipex, char *argv[], char *envp[])
@@ -88,27 +105,7 @@ void	execute_second_command(t_pipex pipex, char *argv[], char *envp[])
 	close(pipex.tube[1]);
 	dup2(pipex.outfile, STDOUT_FILENO);
 	pipex.cmd_args = ft_split(argv[3], ' ');
-	execute_path(pipex, envp);
-	// if (access(pipex.cmd_args[0], X_OK) == 0)
-	// {
-	// 	cmd[0] = pipex.cmd_args[0];
-	// 	cmd[1] = NULL;
-	// 	if (execve(pipex.cmd_args[0], cmd, NULL) == -1)
-	// 		put_error_after_exit(ERR_EXECVE, 0);
-	// }
-	// if (pipex.cmd_args == NULL || pipex.cmd_args[0] == NULL
-	// 	|| *(pipex.cmd_args[0]) == '\0')
-	// {
-	// 	free_child(&pipex);
-	// 	put_error_after_exit(ERR_CMD, 1);
-	// }
-	// pipex.cmd_fullpath = get_cmd_execution_path(pipex.split_path_array,
-	// 	pipex.cmd_args[0]);
-	// if (pipex.cmd_fullpath == NULL)
-	// {
-	// 	free_child(&pipex);
-	// 	put_error_after_exit(ERR_CMD, 1);
-	// }
-	// if (execve(pipex.cmd_fullpath, pipex.cmd_args, envp) == -1)
-	// 	put_error_after_exit(ERR_EXECVE, 0);
+	if (pipex.cmd_args == NULL)
+		put_error(ERR_CMD, 1);
+	execute_command(pipex, envp);
 }
