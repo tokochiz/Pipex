@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 15:32:09 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/03/19 15:44:50 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/03/19 18:13:45 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ int	main(int argc, char *argv[], char *envp[])
 	pipex.pid1 = fork();
 	if (pipex.pid1 == 0)
 		execute_first_command(pipex, argv, envp);
-	waitpid(pipex.pid1, NULL, 0);
+	waitpid(pipex.pid1, NULL, WNOHANG);
 	pipex.pid2 = fork();
 	if (pipex.pid2 == 0)
 		execute_second_command(pipex, argv, envp);
 	close_pipes(&pipex);
-	waitpid(pipex.pid2, NULL, 0);
+	waitpid(pipex.pid2, NULL, WNOHANG);
 	free_parent(&pipex);
 	return (0);
 }
