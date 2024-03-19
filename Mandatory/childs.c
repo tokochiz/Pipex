@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:24:26 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/03/19 15:56:25 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/03/19 18:24:56 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,12 @@ char	*execute_command(t_pipex pipex, char *envp[])
 
 void	execute_first_command(t_pipex pipex, char *argv[], char *envp[])
 {
-	dup2(pipex.tube[1], STDOUT_FILENO);
-	close(pipex.tube[0]);
-	dup2(pipex.infile, STDIN_FILENO);
+	if (dup2(pipex.tube[1], STDOUT_FILENO) < 0)
+		put_error_and_exit(ERR_DUP2, 0);
+	if (close(pipex.tube[0]) < 0)
+		put_error_and_exit(ERR_PIPE, 0);
+	if (dup2(pipex.infile, STDIN_FILENO) < 0)
+		put_error_and_exit(ERR_DUP2, 0);
 	pipex.cmd_args = ft_split(argv[2], ' ');
 	if (pipex.cmd_args == NULL)
 		put_error_and_exit(ERR_CMD, 1);
@@ -104,9 +107,12 @@ void	execute_first_command(t_pipex pipex, char *argv[], char *envp[])
 
 void	execute_second_command(t_pipex pipex, char *argv[], char *envp[])
 {
-	dup2(pipex.tube[0], STDIN_FILENO);
-	close(pipex.tube[1]);
-	dup2(pipex.outfile, STDOUT_FILENO);
+	if (dup2(pipex.tube[0], STDIN_FILENO) < 0)
+		put_error_and_exit(ERR_DUP2, 0);
+	if (close(pipex.tube[1]) < 0)
+		put_error_and_exit(ERR_PIPE, 0);
+	if (dup2(pipex.outfile, STDOUT_FILENO) < 0)
+		put_error_and_exit(ERR_DUP2, 0);
 	pipex.cmd_args = ft_split(argv[3], ' ');
 	if (pipex.cmd_args == NULL)
 		put_error_and_exit(ERR_CMD, 1);
