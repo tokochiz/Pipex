@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 21:18:46 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/03/17 21:33:05 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/03/19 15:41:25 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	put_error_file(t_pipex pipex)
 	exit(EXIT_FAILURE);
 }
 
-void	put_error(const char *msg, int is_manual)
+void	put_error_and_exit(const char *msg, int is_manual)
 {
 	if (is_manual == 1)
 		ft_putstr_fd(msg, STDERR_FILENO);
@@ -29,4 +29,3 @@ void	put_error(const char *msg, int is_manual)
 		perror(msg);
 	exit(EXIT_FAILURE);
 }
-
