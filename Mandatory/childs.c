@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:24:26 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/03/17 21:25:28 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/03/19 15:56:25 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	**extract_path_from_env(char *envp[])
 
 	path_str = NULL;
 	if (envp == NULL)
-		put_error(ERR_CMD, 1);
+		return (NULL);
 	while (*envp)
 	{
 		if (ft_strncmp("PATH=", *envp, 5) == 0)
@@ -30,10 +30,10 @@ char	**extract_path_from_env(char *envp[])
 		envp++;
 	}
 	if (path_str == NULL)
-		put_error(ERR_CMD, 1);
+		put_error_and_exit(ERR_CMD, 1);
 	paths = ft_split(path_str, ':');
 	if (paths == NULL)
-		put_error(ERR_CMD, 1);
+		put_error_and_exit(ERR_CMD, 1);
 	return (paths);
 }
 
@@ -47,7 +47,7 @@ char	*get_path(t_pipex pipex, char *envp[])
 		if (access(pipex.cmd_args[0], X_OK) == 0)
 			return (pipex.cmd_args[0]);
 		else
-			put_error(ERR_DIR, 1);
+			put_error_and_exit(ERR_DIR, 1);
 	}
 	while (*pipex.split_paths)
 	{
@@ -68,23 +68,26 @@ char	*execute_command(t_pipex pipex, char *envp[])
 		|| *(pipex.cmd_args[0]) == '\0')
 	{
 		free_child(&pipex);
-		put_error(ERR_CMD, 1);
+		put_error_and_exit(ERR_CMD, 1);
 	}
-	if (ft_strchr(pipex.cmd_args[0], '/') != 0 || !(envp))
+	if (ft_strchr(pipex.cmd_args[0], '/') != 0)
 	{
 		if (access(pipex.cmd_args[0], X_OK) == 0)
-			return (pipex.cmd_args[0]);
+		{
+			if (execve(pipex.cmd_args[0], pipex.cmd_args, envp) == -1)
+				put_error_and_exit(ERR_EXECVE, 0);
+		}
 		else
-			put_error(ERR_DIR, 1);
+			put_error_and_exit(ERR_DIR, 1);
 	}
 	pipex.cmd_fullpath = get_path(pipex, envp);
 	if (pipex.cmd_fullpath == NULL)
 	{
 		free_child(&pipex);
-		put_error(ERR_CMD, 1);
+		put_error_and_exit(ERR_CMD, 1);
 	}
 	if (execve(pipex.cmd_fullpath, pipex.cmd_args, envp) == -1)
-		put_error(ERR_EXECVE, 0);
+		put_error_and_exit(ERR_EXECVE, 0);
 	return (NULL);
 }
 
@@ -95,7 +98,7 @@ void	execute_first_command(t_pipex pipex, char *argv[], char *envp[])
 	dup2(pipex.infile, STDIN_FILENO);
 	pipex.cmd_args = ft_split(argv[2], ' ');
 	if (pipex.cmd_args == NULL)
-		put_error(ERR_CMD, 1);
+		put_error_and_exit(ERR_CMD, 1);
 	execute_command(pipex, envp);
 }
 
@@ -106,6 +109,6 @@ void	execute_second_command(t_pipex pipex, char *argv[], char *envp[])
 	dup2(pipex.outfile, STDOUT_FILENO);
 	pipex.cmd_args = ft_split(argv[3], ' ');
 	if (pipex.cmd_args == NULL)
-		put_error(ERR_CMD, 1);
+		put_error_and_exit(ERR_CMD, 1);
 	execute_command(pipex, envp);
 }

@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 18:37:43 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/03/06 16:59:11 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/03/19 15:41:10 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,24 @@ typedef struct s_pipex
 	int		infile;
 	int		outfile;
 	int		tube[2];
-	char	**split_path_array;
+	char	**split_paths;
 	char	**cmd_args;
 	char	*cmd_fullpath;
 }			t_pipex;
 
-char		**find_path_from_env(char *envp[]);
 void		close_pipes(t_pipex *pipex);
 
-char		*get_cmd_execution_path(char **paths_list, char *cmd);
-void		execute_path(t_pipex pipex, char *envp[]);
+char		**extract_path_from_env(char *envp[]);
+char		*get_path(t_pipex pipex, char *envp[]);
+char		*execute_command(t_pipex pipex, char *envp[]);
 void		execute_first_command(t_pipex pipex, char *argv[], char *envp[]);
 void		execute_second_command(t_pipex pipex, char *argv[], char *envp[]);
 
+void		free_split(char **split_array);
 void		free_parent(t_pipex *pipex);
 void		free_child(t_pipex *pipex);
 
 void		put_error_file(t_pipex pipex);
-void		put_error_after_exit(const char *msg, int is_manual);
+void	put_error_and_exit(const char *msg, int is_manual);
 
 #endif

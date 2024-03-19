@@ -3,7 +3,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -I $(INC_DIR)
 INC_DIR = includes
 
-SRC_DIR = Mandatory
+SRC_DIR = mandatory
 SRC_FILES = pipex.c \
 			free.c \
 			childs.c \
@@ -19,6 +19,9 @@ all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT)
+
+test:
+	$(CC) $(CFLAGS) -o $(NAME) $(SRCS) $(LIBFT) -g -fsanitize=address
 
 $(LIBFT): 
 	make -C libft 
