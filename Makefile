@@ -20,9 +20,6 @@ all: $(NAME)
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT)
 
-test:
-	$(CC) $(CFLAGS) -o $(NAME) $(SRCS) $(LIBFT) -g -fsanitize=address
-
 $(LIBFT): 
 	make -C libft 
 
