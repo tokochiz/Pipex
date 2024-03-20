@@ -5,13 +5,7 @@
 - Turn in file : Makefile, *.h, *.c
 - Makefile NAME, all, clean, fclean, re
 - Arguments : file1 cmd1 cmd2 file2
-- External functs : • open, close, read, write,
-malloc, free, perror,
-strerror, access, dup, dup2,
-execve, exit, fork, pipe,
-unlink, wait, waitpid
-• ft_printf and any equivalent
-YOU coded
+- 以下のプログラムの要件として指定されている関数以外は使用しないこと : open, close, read, write, malloc, free, perror, strerror, access, dup, dup2,execve, exit, fork, pipe, unlink, wait, waitpid
 - Libft authorized Yes
 - Description This project is about handling pipes.
 
