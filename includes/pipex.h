@@ -6,7 +6,7 @@
 /*   By:  ctokoyod < ctokoyod@student.42tokyo.jp    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 18:37:43 by  ctokoyod         #+#    #+#             */
-/*   Updated: 2024/03/19 18:23:43 by  ctokoyod        ###   ########.fr       */
+/*   Updated: 2024/03/19 22:57:07 by  ctokoyod        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,15 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define ERR_INVALID "Invalid number of arguments\n"
+# define ERR_INVALID "Error : Invalid number of arguments\n"
 # define ERR_INFILE "infile "
 # define ERR_OUTFILE "outfile "
 # define ERR_PIPE "pipe "
 # define ERR_EXECVE "execve "
 # define ERR_DUP2 "dup2 "
+# define ERR_FORK "fork "
 # define ERR_CMD "Error : Command not found\n"
 # define ERR_DIR "Error : No such file of directory\n"
-
 
 typedef struct s_pipex
 {
